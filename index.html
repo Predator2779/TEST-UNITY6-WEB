@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | VIDEOS</title>
+    <title>Unity WebGL Player | TEST-VK</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
@@ -16,25 +16,22 @@
           <div id="unity-progress-bar-full"></div>
         </div>
       </div>
-      <div id="unity-mobile-warning">
-        WebGL builds are not supported on mobile devices.
-      </div>
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
         <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">VIDEOS</div>
+        <div id="unity-build-title">TEST-VK</div>
       </div>
     </div>
     <script>
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/v11.loader.js";
+      var loaderUrl = buildUrl + "/vkv1.loader.js";
       var config = {
-        dataUrl: buildUrl + "/v11.data.unityweb",
-        frameworkUrl: buildUrl + "/v11.framework.js.unityweb",
-        codeUrl: buildUrl + "/v11.wasm.unityweb",
+        dataUrl: buildUrl + "/vkv1.data.unityweb",
+        frameworkUrl: buildUrl + "/vkv1.framework.js.unityweb",
+        codeUrl: buildUrl + "/vkv1.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "VIDEOS",
+        productName: "TEST-VK",
         productVersion: "1.0",
       };
 
@@ -51,11 +48,13 @@
         mobileWarning.style.display = "block";
         setTimeout(() => {
           mobileWarning.style.display = "none";
-        }, 5000);
-      } else {
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
+        }, 1000);
+      } 
+      else {
+        canvas.style.width = "1920px";
+        canvas.style.height = "1080px";
       }
+      
       loadingBar.style.display = "block";
 
       var script = document.createElement("script");
@@ -77,114 +76,39 @@
       document.body.appendChild(script);
     </script>
 
-    <script src="https://yandex.ru/games/sdk/v2"></script>
-    <script>
-      var player;
-      var sdk;
-      var payments = null;
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
-      YaGames.init({
-        adv:{
-          onAdvClose: wasShown =>{console.info('adv closed!');
-        }
-      }
-      })
-        .then(ysdk => {
-            sdk = ysdk;
-            sdk.adv.showFullscreenAdv({callbacks:{}});
-      });
-
-      var lb;
-
-    function GetLeaderBoard(){
-      sdk.getLeaderboards().then(_lb => lb = _lb);
-            }
-
-    function SetLeaderBoard(score){
-      sdk.getLeaderboards()
-          .then(lb => {
-            console.log(score);
-            lb.setLeaderboardScore('LeaderBoard', score);});
-        }
-
-    function GetLeaderBoardEntries(){
-      sdk.getLeaderboards()
-          .then(lb => {lb.getLeaderboardEntries('LeaderBoard', { quantityTop: 10, includeUser: true, quantityAround: 3 }).then(res =>
-            {
-              console.log(res);
-              unityI.SendMessage('YandexSDK', 'BoardEntriesReady', JSON.stringify(res));});
-            });
-      }
-
-
+    <script type="text/javascript">
+      vkBridge.send('VKWebAppInit');
 
       function auth(){
-        initPlayer().then(() =>{
-                getUser();
-            }).catch(err => {
-             sdk.auth.openAuthDialog().then(() => {
-              initPlayer();
-              getUser();
-          });
-          });
-        }
-
-
-      function initPlayer(){
-        console.log('InitPlayerTry')
-        return sdk.getPlayer().then(_player => {
-                console.log('InitPlayer2');
-                player = _player;
-            });}
-
-      function getUser(){
-          console.log('try to get Name');
-          var data = player.getName();
-          unityI.SendMessage('YandexSDK', 'AuthenticateSuccess', data);
-          console.log('getName done');
-
+        vkBridge.send('VKWebAppGetUserInfo').then(_info =>{
+          console.log(_info);
+          unityI.SendMessage('VKSDK', 'AuthenticateSuccess', JSON.stringify(_info));
+        });
       }
 
-  function getUserData(){
-            player.getData().then(stats =>{
-              console.log('Data is getting');
-              console.log(JSON.stringify(stats));
-              GetLeaderBoard();
-              unityI.SendMessage('YandexSDK', 'DataGetting', JSON.stringify(stats));
-           });
-      }
+      function getUserData(){
+        vkBridge.send("VKWebAppStorageGet",{"keys":["_save"]}).then(data =>{
+        console.log(data);
+        unityI.SendMessage('VKSDK', 'DataGetting', JSON.stringify(data));
+      });}
 
-  function setUserData(_data){
-      console.log('Try Save');
-      console.log(_data);
-      player.setData({data : _data}).then(()=>{
-        console.log('saved');
-      }).catch(()=>{console.log('unsaved')});
-    }
+      function setUserData(data){
+        console.log(data);
+        vkBridge.send('VKWebAppStorageSet',{"key": "_save" , "value": data}).then(_info =>{
+          console.log("Saved!")});
+      }
 
       function showFullscrenAd(){
-        sdk.adv.showFullscreenAdv({
-          callbacks: {
-            onClose: function(wasShown) {},
-            onError: function(error) {}
-          }
-        })
+        vkBridge.send('VKWebAppShowNativeAds',{ad_format:"interstitial"}).then(data => {
+          console.log(data);});
       }
 
-     function showRewardedAd(id){
-        sdk.adv.showRewardedVideo({
-        callbacks: {
-            onOpen: () => {},
-            onRewarded: () => {
-                unityI.SendMessage('YandexSDK', 'RewardGetting');
-                console.log('Rewarded! Id: ' + id);},
-            onClose: () => {},
-            onError: (e) => {
-                var data = {"id" : id, "error" : error};
-                console.log('Error while open video ad:', e);
-            }
-          }
-        })
+      function showRewardedAd(){
+        vkBridge.send('VKWebAppShowNativeAds',{ad_format:"reward"}).then(data => {
+          console.log(data);
+          unityI.SendMessage('VKSDK', 'RewardGetting',JSON.stringify(data.result));})
       }
     </script>
   </body>
