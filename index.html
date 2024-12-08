@@ -34,7 +34,7 @@
         codeUrl: buildUrl + "/vkv1.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "VIDEOS",
+        productName: "ROMA",
         productVersion: "1.0",
       };
 
@@ -45,18 +45,18 @@
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var mobileWarning = document.querySelector("#unity-mobile-warning");
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        container.className = "unity-mobile";
-        config.devicePixelRatio = 1;
-        mobileWarning.style.display = "none";
-        // setTimeout(() => {
-        //   mobileWarning.style.display = "none";
-        // }, 1000);
-      } else {
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
-      }
-      loadingBar.style.display = "block";
+      // if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      //   container.className = "unity-mobile";
+      //   config.devicePixelRatio = 1;
+      //   mobileWarning.style.display = "none";
+      //   // setTimeout(() => {
+      //   //   mobileWarning.style.display = "none";
+      //   // }, 1000);
+      // } else {
+      //   canvas.style.width = "960px";
+      //   canvas.style.height = "600px";
+      // }
+      // loadingBar.style.display = "block";
 
       var script = document.createElement("script");
       var unityI = null;
