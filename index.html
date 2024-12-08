@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | VIDEOS</title>
+    <title>Unity WebGL Player | TEST-VK</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
@@ -19,7 +19,7 @@
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
         <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">WHAT</div>
+        <div id="unity-build-title">TEST-VK</div>
       </div>
     </div>
     <script>
@@ -31,7 +31,7 @@
         codeUrl: buildUrl + "/vkv1.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "ROMA",
+        productName: "TEST-VK",
         productVersion: "1.0",
       };
 
@@ -42,18 +42,20 @@
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var mobileWarning = document.querySelector("#unity-mobile-warning");
 
-      // if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      //   container.className = "unity-mobile";
-      //   config.devicePixelRatio = 1;
-      //   mobileWarning.style.display = "none";
-      //   // setTimeout(() => {
-      //   //   mobileWarning.style.display = "none";
-      //   // }, 1000);
-      // } else {
-      //   canvas.style.width = "960px";
-      //   canvas.style.height = "600px";
-      // }
-      // loadingBar.style.display = "block";
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1;
+        mobileWarning.style.display = "block";
+        setTimeout(() => {
+          mobileWarning.style.display = "none";
+        }, 1000);
+      } 
+      else {
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
+      
+      loadingBar.style.display = "block";
 
       var script = document.createElement("script");
       var unityI = null;
@@ -109,6 +111,5 @@
           unityI.SendMessage('VKSDK', 'RewardGetting',JSON.stringify(data.result));})
       }
     </script>
-    
   </body>
 </html>
