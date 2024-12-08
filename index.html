@@ -104,6 +104,7 @@
 
       document.querySelector("#unity-loading-bar").style.display = "block";
 
+      var unityI = null;
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
@@ -122,6 +123,23 @@
 
       document.body.appendChild(script);
 
+    </script>
+    <script src="https://yandex.ru/games/sdk/v2"></script>
+    <script>
+      var player;
+      var sdk;
+      var payments = null;
+
+      YaGames.init()
+      .then(ysdk => {
+        sdk = ysdk;
+      });
+
+      function Start(){
+        var data = sdk.environment;
+        console.log(data);
+        unityI.SendMessage('SDKLANG', 'GettingLang', JSON.stringify(data));
+      }
     </script>
   </body>
 </html>
