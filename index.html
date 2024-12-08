@@ -48,10 +48,10 @@
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
         config.devicePixelRatio = 1;
-        mobileWarning.style.display = "block";
-        setTimeout(() => {
-          mobileWarning.style.display = "none";
-        }, 5000);
+        // mobileWarning.style.display = "block";
+        // setTimeout(() => {
+        //   mobileWarning.style.display = "none";
+        // }, 5000);
       } else {
         canvas.style.width = "960px";
         canvas.style.height = "600px";
@@ -80,10 +80,7 @@
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
     <script type="text/javascript">
-
       vkBridge.send('VKWebAppInit');
-
-
 
       function auth(){
         vkBridge.send('VKWebAppGetUserInfo').then(_info =>{
@@ -114,8 +111,6 @@
           console.log(data);
           unityI.SendMessage('VKSDK', 'RewardGetting',JSON.stringify(data.result));})
       }
-
-
     </script>
     
   </body>
